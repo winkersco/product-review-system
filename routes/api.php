@@ -26,3 +26,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::get('me', [AuthController::class, 'me']);
 });
+
+Route::group(['middleware' => ['api', 'auth:api']], function () {
+    Route::resource('products', ProductController::class)->only(['index', 'store']);
+});
