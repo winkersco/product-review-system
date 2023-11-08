@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
@@ -18,7 +19,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('comments')->get();
-        return response()->json(ProductResource::collection($products), Response::HTTP_OK);
+        return ApiResponse::createResponse('Products fetched successfully.', ProductResource::collection($products), Response::HTTP_OK);
     }
 
     /**
@@ -32,6 +33,6 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $request->input('name'),
         ]);
-        return response()->json(ProductResource::make($product), Response::HTTP_CREATED);
+        return ApiResponse::createResponse('Product created successfully.', ProductResource::make($product), Response::HTTP_CREATED);
     }
 }
