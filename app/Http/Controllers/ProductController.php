@@ -17,7 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('comments')->get();
+        return response()->json(ProductResource::collection($products), Response::HTTP_OK);
     }
 
     /**
