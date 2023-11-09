@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,4 +31,5 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function () {
 
 Route::group(['middleware' => ['api', 'auth:api']], function () {
     Route::resource('products', ProductController::class)->only(['index', 'store']);
+    Route::resource('comments', CommentController::class)->only(['store']);
 });
