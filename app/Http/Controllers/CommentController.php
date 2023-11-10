@@ -59,7 +59,7 @@ class CommentController extends Controller
     private function updateProductCommentFile($product)
     {
         $key = $product->name;
-        $value = $product->comments->count() + 1;
+        $value = $product->comments->count();
         $filepath = config('constants.product_comments_filepath');
 
         if ($product->wasRecentlyCreated) {
