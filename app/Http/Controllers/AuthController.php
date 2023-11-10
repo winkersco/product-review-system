@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -35,7 +38,7 @@ class AuthController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
 
-        return response()->json(['message' => 'User registered successfully']);
+        return ApiResponse::createResponse('User registered successfully.', UserResource::make($user), Response::HTTP_CREATED);
     }
 
     /**
@@ -61,7 +64,8 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $user = auth()->user();
+        return ApiResponse::createResponse('User fetched successfully.', UserResource::make($user), Response::HTTP_OK);
     }
 
     /**
@@ -72,8 +76,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-
-        return response()->json(['message' => 'Successfully logged out']);
+        return ApiResponse::createResponse('User logged out successfully.', null, Response::HTTP_OK);
     }
 
     /**
