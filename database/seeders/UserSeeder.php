@@ -15,7 +15,8 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::factory()->create([
-            'username' => 'parspack',
+            'username' => config('constants.user.username'),
+            'password' => bcrypt(config('constants.user.password')),
         ]);
     }
 }
