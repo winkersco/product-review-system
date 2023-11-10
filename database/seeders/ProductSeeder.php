@@ -14,8 +14,8 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        Product::updateOrCreate(['name' => 'A']);
-        Product::updateOrCreate(['name' => 'B']);
-        Product::updateOrCreate(['name' => 'C']);
+        Product::factory()->create(['name' => 'A']);
+        Product::factory()->create(['name' => 'B']);
+        Product::factory()->create(['name' => 'C']);
     }
 }
