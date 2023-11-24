@@ -38,7 +38,7 @@ class AuthController extends Controller
             'password' => bcrypt($request->input('password')),
         ]);
 
-        return ApiResponse::createResponse('User registered successfully.', UserResource::make($user), Response::HTTP_CREATED);
+        return ApiResponse::success(UserResource::make($user), 'User registered successfully.', Response::HTTP_CREATED);
     }
 
     /**
@@ -65,7 +65,7 @@ class AuthController extends Controller
     public function me()
     {
         $user = auth()->user();
-        return ApiResponse::createResponse('User fetched successfully.', UserResource::make($user), Response::HTTP_OK);
+        return ApiResponse::success(UserResource::make($user), 'User fetched successfully.');
     }
 
     /**
@@ -76,7 +76,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return ApiResponse::createResponse('User logged out successfully.', null, Response::HTTP_OK);
+        return ApiResponse::success(null, 'User logged out successfully.');
     }
 
     /**

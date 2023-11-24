@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Product;
+use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Console\Command;
 
 class CreateProduct extends Command
@@ -21,14 +22,17 @@ class CreateProduct extends Command
      */
     protected $description = 'Create a new product';
 
+    protected $productRepository;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ProductRepositoryInterface $productRepository)
     {
         parent::__construct();
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -40,12 +44,12 @@ class CreateProduct extends Command
     {
         $name = $this->argument('name');
 
-        if (Product::where('name', $name)->exists()) {
+        if ($this->productRepository->existsByName($name)) {
             $this->error("Product '{$name}' already exists.");
             return;
         }
 
-        Product::create([
+        $this->productRepository->createProduct([
             'name' => $name,
         ]);
 

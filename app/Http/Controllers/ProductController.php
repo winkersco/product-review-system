@@ -2,15 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\ProductRepositoryInterface;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
-use App\Models\Product;
+use F9Web\ApiResponseHelpers;
 use Illuminate\Http\Response;
 
+/**
+ * Class ProductController
+ * @package App\Http\Controllers
+ */
 class ProductController extends Controller
 {
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+
+    /**
+     * ProductController constructor.
+     *
+     * @param ProductRepositoryInterface $productRepository
+     */
+    public function __construct(ProductRepositoryInterface $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +37,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('comments')->get();
-        return ApiResponse::createResponse('Products fetched successfully.', ProductResource::collection($products), Response::HTTP_OK);
+        $paginator = $this->productRepository->getAllProducts();
+        $data = ProductResource::collection($paginator->items());
+        return ApiResponse::paginate($paginator, $data, 'Products fetched successfully.');
     }
 
     /**
@@ -30,9 +50,10 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = Product::create([
+        $product = $this->productRepository->createProduct([
             'name' => $request->input('name'),
         ]);
-        return ApiResponse::createResponse('Product created successfully.', ProductResource::make($product), Response::HTTP_CREATED);
+        $data = ProductResource::make($product);
+        return ApiResponse::success($data, 'Product created successfully.', Response::HTTP_CREATED);
     }
 }
